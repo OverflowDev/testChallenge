@@ -40,7 +40,7 @@ function Form() {
     } 
     getOptions()
 
-  }, [optionDataRef])
+  }, [])
   
   // Fetch Data 
   useEffect(() => {
