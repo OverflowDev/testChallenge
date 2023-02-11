@@ -104,7 +104,7 @@ function Form() {
   return (
     <div className="font-manrope mt-12 flex h-screen flex-col gap-14">
       <div className='flex justify-end px-6'>
-        <Sectors/>
+        {/* <Sectors/> */}
       </div>
       <div className='md:flex items-center justify-center md:px-24'>
         <form onSubmit={handleSubmit}>
