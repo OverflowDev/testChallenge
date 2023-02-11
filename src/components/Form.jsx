@@ -51,10 +51,7 @@ function Form() {
         const docRef = doc(db, 'Organization', dataId)
         const orgData = await getDoc(docRef)
         if(orgData.exists()) {
-          // console.log(orgData.data())
-          // const mapOrgData = orgData.docs.map((doc) => ({...doc.data(), id: doc.id}))
           setData(orgData.data())
-          // setFormData(orgData.data())
           setFormData({...orgData.data(), name: orgData.data().name, sector: orgData.data().sector})
         } else {
           toast.error('Document not found')
@@ -73,26 +70,12 @@ function Form() {
     if(!formData) {
       toast.error('all field required')
     }
-    // if(data){
-    //   const dataDoc = doc(db, 'Organization', data.id)
-    //   const newFormData = {name: formData.name, sector: formData.sector}
-    //   await updateDoc(dataDoc, newFormData)
-    // } else {
-    //   const docRef = await addDoc(organizationDataRef, {name: formData.name, sector: formData.sector})
-    //   sessionStorage.setItem('dataId', docRef.id)
-    // }
+
     const dataId = sessionStorage.getItem('dataId')
     if (dataId) {
       const docRef = doc(db, 'Organization', dataId)
-      // const orgData = await getDoc(docRef)
-      // const ad =  doc(db, 'Organization', data.id)
       await updateDoc(docRef, formData);
       toast.success('Updated')
-      // if (docRef.exists) {
-      //   await updateDoc(docRef, formData);
-      // } else {
-      //   console.error(`Document with ID ${dataId} does not exist`);
-      // }
     } else {
       const docRef = await addDoc(organizationDataRef, formData);
       sessionStorage.setItem('dataId', docRef.id);
