@@ -49,7 +49,7 @@ function Form() {
     } 
     getOptions()
 
-  }, [])
+  })
   
   // Fetch Data 
   useEffect(() => {
@@ -64,7 +64,6 @@ function Form() {
           setFormData({...orgData.data(), name: orgData.data().name, sector: orgData.data().sector})
         } else {
           toast.error('Document not found')
-          console.log('document not found')
         }
       }
     }
@@ -83,11 +82,14 @@ function Form() {
     const dataId = sessionStorage.getItem('dataId')
     if (dataId) {
       const docRef = doc(db, 'Organization', dataId)
-      await updateDoc(docRef, formData);
+      await updateDoc(docRef, formData)
+      getDoc(docRef).then(doc => {
+        setData(doc.data())
+      })
       toast.success('Updated')
     } else {
       const docRef = await addDoc(organizationDataRef, formData);
-      sessionStorage.setItem('dataId', docRef.id);
+      sessionStorage.setItem('dataId', docRef.id)
       toast.success('Saved')
     }
   }
@@ -125,6 +127,7 @@ function Form() {
               <select 
                 required
                 onChange={handleInputChange}
+                value={formData.sector}
                 name='sector'
                 className="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               >
