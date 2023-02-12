@@ -7,6 +7,7 @@ import {collection, getDocs, getDoc, addDoc, updateDoc, doc} from 'firebase/fire
 import Sectors from './Sectors';
 
 function Form() {
+  const dataId = sessionStorage.getItem('dataId')
 
   // options
   const optionDataRef = collection(db, "OptionData");
@@ -17,7 +18,8 @@ function Form() {
   const [formData, setFormData] = useState(
     { 
     name: '', 
-    sector: '' 
+    sector: '',
+    agreeToTerms: false
   })
   const [options, setOptions] = useState([])  
   const [data, setData] = useState([])
@@ -29,6 +31,13 @@ function Form() {
       [event.target.name]: event.target.value
     });
   }
+
+  const handleCheckboxChange = (event) => {
+    setFormData({
+    ...formData,
+    [event.target.name]: event.target.checked
+    })
+    }
   
 
   // Fetch options
@@ -128,12 +137,28 @@ function Form() {
                   Please select a sector
               </p>
             </div>
+            <div className='flex items-center'>
+                <label className="block text-gray-500 font-bold" htmlFor="agreeToTerms">
+                  <input 
+                    className="ml-2 leading-tight" 
+                    type="checkbox" 
+                    name="agreeToTerms"
+                    checked={formData.agreeToTerms}
+                    onChange={handleCheckboxChange} 
+                    required
+                  />
+                  <span className="text-sm">
+                      Agree to terms
+                  </span>
+                </label>
+            </div>
             <div className='flex justify-center'>
               <button 
                 type='submit' 
                 className='mt-2 py-2 px-4 rounded bg-gray-300'
               >
-                Save
+                {dataId ? 'Update' : 'Save'}
+                {/* Save */}
               </button>
             </div>
           </div>
