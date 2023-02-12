@@ -40,20 +40,19 @@ function Form() {
 
   }
 
-  const handleSelectChange = (selectedSectors) => {
+  const handleSectorChange = event => {
+    const { value } = event.target
+    let updatedSectors = [...formData.sector];
+    if (updatedSectors.includes(value)) {
+      updatedSectors = updatedSectors.filter(item => item !== value);
+    } else {
+      updatedSectors.push(value);
+    }
     setFormData({
       ...formData,
-      sector: selectedSectors.map(sector => sector.value)
-    });
+      sector: updatedSectors
+    })
   }
-
-  // const handleSelectChange = (selectedSectors) => {
-  //   // const selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value)
-  //   setFormData({
-  //     ...formData,
-  //     sector: selectedSectors.map(sector => sector.value)
-  //   });
-  // }
 
   const handleCheckboxChange = (event) => {
     setFormData({
@@ -150,6 +149,17 @@ function Form() {
 
             <div className='mt-6'>
               <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
+              {options.map(option => (
+                <div key={option.id}>
+                  <input
+                    type="checkbox"
+                    value={option.name}
+                    checked={formData.sector.includes(option.name)}
+                    onChange={handleSectorChange}
+                  />
+                  <span className="ml-2">{option.name}</span>
+                </div>
+              ))}
               {/* <Select 
                 options={options} 
                 isMulti
@@ -158,7 +168,7 @@ function Form() {
                 required
               /> */}
 
-              <select 
+              {/* <select 
                 // multiple={true}
                 // size='4'
                 required
@@ -176,7 +186,7 @@ function Form() {
                     {option.name}
                   </option>
                 ))}
-              </select>
+              </select> */}
               {/* <p className="invisible peer-invalid:visible text-red-700 font-light">
                   Please select a sector
               </p> */}
@@ -220,7 +230,13 @@ function Form() {
               ))} */}
               <div className='flex flex-col '>
                 <div className='md:text-lg text-md'>Name: {data.name}</div>
-                <div className='md:text-lg text-md'>Sector: {data.sector}</div>
+                {/* <div className='md:text-lg text-md'>Sector: {data.sector}</div> */}
+                <h1 className='font-bold'>Sectors</h1>
+                {data?.sector?.map((item, i) => (
+                  <div key={i}>
+                    {item}
+                  </div>
+                ))}
               </div>
         </div>
       </div>
