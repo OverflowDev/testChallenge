@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react'
 
 import { toast} from 'react-hot-toast';
+import Select from 'react-select'
 
 import {db} from '../firebaseConfig'
 import {collection, getDocs, getDoc, addDoc, updateDoc, doc} from 'firebase/firestore'
@@ -18,19 +19,41 @@ function Form() {
   const [formData, setFormData] = useState(
     { 
     name: '', 
-    sector: '',
+    sector: [],
     agreeToTerms: false
   })
   const [options, setOptions] = useState([])  
   const [data, setData] = useState([])
-  // const [sessionId, setSessionId] = useState('')
 
+  // const handleInputChange = (name, value) => {
+  //   setFormData({
+  //     ...formData,
+  //     [name]: value
+  //   });
+  // }
   const handleInputChange = (event) => {
+
     setFormData({
       ...formData,
       [event.target.name]: event.target.value
+    })
+
+  }
+
+  const handleSelectChange = (selectedSectors) => {
+    setFormData({
+      ...formData,
+      sector: selectedSectors.map(sector => sector.value)
     });
   }
+
+  // const handleSelectChange = (selectedSectors) => {
+  //   // const selectedOptions = Array.from(event.target.selectedOptions).map(option => option.value)
+  //   setFormData({
+  //     ...formData,
+  //     sector: selectedSectors.map(sector => sector.value)
+  //   });
+  // }
 
   const handleCheckboxChange = (event) => {
     setFormData({
@@ -49,7 +72,7 @@ function Form() {
     } 
     getOptions()
 
-  })
+  },[])
   
   // Fetch Data 
   useEffect(() => {
@@ -90,6 +113,9 @@ function Form() {
     } else {
       const docRef = await addDoc(organizationDataRef, formData);
       sessionStorage.setItem('dataId', docRef.id)
+      getDoc(docRef).then(doc => {
+        setData(doc.data())
+      })
       toast.success('Saved')
     }
   }
@@ -116,43 +142,60 @@ function Form() {
                   required
                   onChange={handleInputChange}
                 />
-                <p className="invisible peer-invalid:visible text-red-700 font-light">
+                {/* <p className="invisible peer-invalid:visible text-red-700 font-light">
                   Please enter your name
-                </p>
+                </p> */}
               </div>
             </div>
 
             <div className='mt-6'>
               <label htmlFor="countries" className="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-400">Select an option</label>
+              {/* <Select 
+                options={options} 
+                isMulti
+                onChange={handleSelectChange}
+                value={formData.sector}
+                required
+              /> */}
+
               <select 
+                // multiple={true}
+                // size='4'
                 required
                 onChange={handleInputChange}
                 value={formData.sector}
                 name='sector'
-                className="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                className="block appearance-none w-full bg-gray-50 border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded leading-tight focus:outline-none focus:shadow-outline"
               >
-                <option defaultValue>Choose a sector</option>
                 {options.map(option => (
-                  <option key={option.id} value={option.name}required>{option.name}</option>
+                  <option 
+                    key={option.id} 
+                    value={option.name}
+                    required
+                  >
+                    {option.name}
+                  </option>
                 ))}
               </select>
-              <p className="invisible peer-invalid:visible text-red-700 font-light">
+              {/* <p className="invisible peer-invalid:visible text-red-700 font-light">
                   Please select a sector
-              </p>
+              </p> */}
             </div>
-            <div className='flex items-center'>
+            <div className='flex items-center mt-4'>
                 <label className="block text-gray-500 font-bold" htmlFor="agreeToTerms">
-                  <input 
-                    className="ml-2 leading-tight" 
-                    type="checkbox" 
-                    name="agreeToTerms"
-                    checked={formData.agreeToTerms}
-                    onChange={handleCheckboxChange} 
-                    required
-                  />
-                  <span className="text-sm">
-                      Agree to terms
-                  </span>
+                  <div className='flex items-center'>
+                    <input 
+                      className="ml-2 " 
+                      type="checkbox" 
+                      name="agreeToTerms"
+                      checked={formData.agreeToTerms}
+                      onChange={handleCheckboxChange} 
+                      required
+                    />
+                    <span className="text-sm">
+                        Agree to terms
+                    </span>
+                  </div>
                 </label>
             </div>
             <div className='flex justify-center'>

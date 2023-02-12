@@ -12,13 +12,14 @@ function Sectors() {
     const optionDataRef = collection(db, "OptionData");
     // const organizationRef = db.ref("Organization")
     const [formData, setFormData] = useState({
-        name: ''
+        name: '', 
+        label: ''
     })
     
     const onSubmit = async (e) => {
         e.preventDefault()
-        await addDoc(optionDataRef, {name: formData.name})
-        setFormData({name: ''})
+        await addDoc(optionDataRef, {name: formData.name, label: formData.label})
+        setFormData({name: '', label: ''})
         toast.success('sector added')
     } 
 
@@ -53,6 +54,23 @@ function Sectors() {
                 onChange={event => setFormData({ ...formData, name: event.target.value })}
                 required
                 placeholder="sectors"
+                className="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                />
+            </div>
+            <div className="">
+                <label
+                htmlFor="email"
+                className="mb-3 block text-base font-medium text-[#07074D]"
+                >
+                Add label
+                </label>
+                <input
+                type="text"
+                id="name"
+                value={formData.label}
+                onChange={event => setFormData({ ...formData, label: event.target.value })}
+                required
+                placeholder="label"
                 className="w-full rounded-md border border-[#e0e0e0] bg-white py-2 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
                 />
             </div>
